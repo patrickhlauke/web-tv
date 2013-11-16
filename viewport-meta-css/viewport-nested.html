@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+<title>Viewport test: @viewport nested inside @media</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* on devices with less than 480 physical pixels width,
+   inject a viewport width of 480px to fill the screen width.
+   bigger mobile devices (e.g. tablets) are unaffected and left
+   to deal with it as they normally would
+   note that in the max-device-width calculation, the *real* device-width
+   is used...not the high-dpi adjusted value we saw in test3 */
+
+@media screen and (max-device-width: 480px) {
+    @-o-viewport {
+        width: 480px;
+    }
+    @-webkit-viewport {
+        width: 480px;
+    }
+    @viewport {
+        width: 480px;
+    }
+    h1 { color: green; }
+}
+</style>
+<script src="scripts/report.js"></script>
+</head>
+<body>
+<h1>Viewport test</h1>
+<section>
+<pre><code>
+@media screen and (max-device-width: 480px) {
+    @viewport {
+        width: 480px;
+    }
+    h1 { color: green; }
+}</code></pre>
+<p>to test if MQ itself kicks in, heading changes to green.</p>
+<output></output>
+</section>
+</body>

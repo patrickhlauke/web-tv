@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+<title>mediaquery test scan</title>
+<style>
+body { background: #f00; color: #fff;}
+@media (scan: progressive), (scan: interlace) {
+    body { background: #0f0; }
+}
+</style>
+</head>
+<body>
+<h1>mediaquery test scan</h1>
+<pre><code>
+body { background: #f00; color: #fff;}
+@media (scan: progressive),
+       (scan: interlace) {
+    body { background: #0f0; }
+}</code></pre>
+	<p>red background normally, but if scan media query feature is either progressive or interlace (basically, if it's supported in any form), red.</p>
+</body>

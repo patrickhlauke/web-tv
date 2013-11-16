@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+<title>Viewport test: @viewport with second value of auto</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* minimum width of 480px - any device with device-width below that gets a viewport forced to 480px.
+   devices with device-width above 480px are left to do what they normally do through the auto keyword */
+
+@-o-viewport {
+	width: 480px auto;
+}
+@-webkit-viewport {
+	width: 480px auto;
+}
+@viewport {
+	width: 480px auto;
+}
+</style>
+<script src="scripts/report.js"></script>
+</head>
+<body>
+<h1>Viewport test</h1>
+<section>
+<pre><code>
+@viewport {
+	width: 480px auto;
+}
+</code></pre>
+<output></output>
+</section>
+</body>

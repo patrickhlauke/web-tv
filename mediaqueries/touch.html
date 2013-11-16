@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+<title>mediaquery test touch-enabled feature</title>
+<style>
+body { background: #f00; color: #fff;}
+@media screen and (touch-enabled: 1) {
+    body { background: #0f0; }
+}
+</style>
+</head>
+<body>
+<h1>mediaquery test touch-enabled</h1>
+<pre><code>
+body { background: #f00; color: #fff;}
+@media screen and (touch-enabled: 1) {
+    body { background: #0f0; }
+}</code></pre>
+	<p>red background normally. green if touch-enabled.</p>
+</body>

@@ -1,0 +1,5 @@
+html { color: #cc0f16; background: url(images/pixel-grid.png); }
+body { font-family: Helvetica,Arial,sans; }
+h1 { font-size: 1.5em; }
+output { font-size: 0.75em; color: #333; }
+section { background: rgba(255,255,255,0.9); padding: 1em; border-radius: 5px; border: 1px #aaa solid; }

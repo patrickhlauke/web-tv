@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<head>
+<title>Viewport test: meta width with wider actual content</title>
+<meta name="viewport" content="width=550">
+<link rel="stylesheet" href="style.css">
+<script src="scripts/report.js"></script>
+</head>
+<body>
+<h1>Viewport test</h1>
+<section>
+<p><code>&lt;meta name="viewport" content="width=550"&gt;</code></p>
+<p><small>Testing what happens when a viewport width is set, but actual page content goes beyond that width</small></p>
+<div style="width:600px;border:2px red solid;margin: 1em 0;"><code>div</code> styled to be <code>600px</code></div>
+<output></output>
+</section>
+</body>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+<title>Viewport test: meta width changed on load</title>
+<meta name="viewport" content="width=320">
+<link rel="stylesheet" href="style.css">
+<script>
+window.addEventListener('load', function() { 
+	var metas = document.getElementsByTagName('meta');
+	for (i=0; i<metas.length; i++) {
+		if (metas[i].name == "viewport") {
+			metas[i].content = "width=640";
+			
+		}
+	}
+}, false);
+</script>
+</head>
+<body>
+<h1>Viewport test</h1>
+<section>
+<p>Viewport set to 320px width in markup, then on load modified to 640px</p>
+</section>
+</body>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+<title>mediaquery test device-width</title>
+<style>
+body { background: #0f0; color: #fff;}
+@media screen and (max-device-width: 480px) {
+    body { background: #f00; }
+}
+</style>
+</head>
+<body>
+<h1>mediaquery test device width</h1>
+<pre><code>
+body { background: #0f0; color: #fff;}
+@media screen and (max-device-width: 480px) {
+    body { background: #f00; }
+}</code></pre>
+	<p>red background when max-device-width is 480px, otherwise green. does it change on portrait/landscape flip?</p>
+</body>

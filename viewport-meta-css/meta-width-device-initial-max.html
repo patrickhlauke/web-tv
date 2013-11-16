@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<head>
+<title>Viewport test: meta width set to device-width, initial-scale=1 and minimum/maximum-scale=1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<link rel="stylesheet" href="style.css">
+<script src="scripts/report.js"></script>
+</head>
+<body>
+<h1>Viewport test</h1>
+<section>
+<p><code>&lt;meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1"&gt;</code></p>
+<p><small>the classic overengineered "prevent iOS from changing zoom rotating portrait/landscape, and make device-width sane in landscape", which breaks zooming and relies primarily on the browser's error correction for incompatible viewport settings (as the device-width AND initial-scale=1 can't work together by default, so iOS drops the first one on the floor)</small></p>
+<output></output>
+</section>
+</body>
