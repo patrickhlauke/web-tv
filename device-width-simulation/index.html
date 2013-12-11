@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<title>TV test</title>
+<script>
+var getParams = function () {
+  var params = {};
+  if (location.search) {
+    var parts = location.search.slice(1).split('&');
+
+    parts.forEach(function (part) {
+      var pair = part.split('=');
+      pair[0] = decodeURIComponent(pair[0]);
+      pair[1] = decodeURIComponent(pair[1]);
+      params[pair[0]] = (pair[1] !== 'undefined') ?
+        pair[1] : true;
+    });
+  }
+  return params;
+}
+</script>
+<style>
+html, body { margin:0; padding: 0;}
+iframe {
+	border: none;
+	margin: 0;
+	padding: 0;
+	-webkit-transform-origin: 0 0;
+	overflow:hidden;
+}
+</style>
+<body>
+<iframe width="0" height="0" src=""></iframe>
+<script>
+var src = getParams()['url'] ? getParams()['url'] : 'http://patrickhlauke.github.io/web-standards/viewport-meta-css/meta-width-device.html';
+var idealviewportwidth= getParams()['width'] ? getParams()['width'] : 495;
+var ratio=window.innerWidth/window.innerHeight;
+var idealviewportheight=idealviewportwidth/ratio;
+var scale=window.innerWidth/idealviewportwidth;
+var i = document.getElementsByTagName('iframe')[0];
+i.src = src;
+i.width = idealviewportwidth;
+i.height = idealviewportheight;
+i.style.webkitTransform = "scale("+scale+")";
+</script>
