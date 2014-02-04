@@ -1,2 +1,162 @@
 <!DOCTYPE html>
 <title>Chromecast test page</title>
+<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+<h1>Chromecast test page</h1>
+<button id="launch">Launch!</button>
+<output id="debugmessage"></output>
+<script>
+document.getElementById('launch').addEventListener('click',launchApp,true);
+
+/**
+ * global variables
+ */
+var currentMediaSession = null;
+var currentVolume = 0.5;
+var progressFlag = 1;
+var mediaCurrentTime = 0;
+var session = null;
+
+/**
+ * Call initialization
+ */
+ if (!chrome.cast || !chrome.cast.isAvailable) {
+  setTimeout(initializeCastApi, 1000);
+}
+
+function initializeCastApi() {
+  // https://cast.google.com/publish/#/overview
+  var applicationID = "38227FEB";
+  var sessionRequest = new chrome.cast.SessionRequest(applicationID);
+  var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
+    sessionListener,
+    receiverListener);
+
+  chrome.cast.initialize(apiConfig, onInitSuccess, onError);
+};
+
+/**
+ * initialization success callback
+ */
+function onInitSuccess() {
+  appendMessage("init success");
+}
+
+/**
+ * initialization error callback
+ */
+function onError() {
+  console.log("error");
+  appendMessage("error");
+}
+
+/**
+ * generic success callback
+ */
+function onSuccess(message) {
+  console.log(message);
+}
+
+/**
+ * callback on success for stopping app
+ */
+function onStopAppSuccess() {
+  console.log('Session stopped');
+  appendMessage('Session stopped');
+  document.getElementById("casticon").src = 'images/cast_icon_idle.png'; 
+}
+
+/**
+ * session listener during initialization
+ */
+function sessionListener(e) {
+  console.log('New session ID: ' + e.sessionId);
+  appendMessage('New session ID:' + e.sessionId);
+  session = e;
+  if (session.media.length != 0) {
+    appendMessage(
+        'Found ' + session.media.length + ' existing media sessions.');
+    onMediaDiscovered('onRequestSessionSuccess_', session.media[0]);
+  }
+  session.addMediaListener(
+      onMediaDiscovered.bind(this, 'addMediaListener'));
+  session.addUpdateListener(sessionUpdateListener.bind(this));  
+}
+
+/**
+ * session update listener 
+ */
+function sessionUpdateListener(isAlive) {
+  var message = isAlive ? 'Session Updated' : 'Session Removed';
+  message += ': ' + session.sessionId;
+  appendMessage(message);
+  if (!isAlive) {
+    session = null;
+  }
+};
+
+/**
+ * receiver listener during initialization
+ */
+function receiverListener(e) {
+  if( e === 'available' ) {
+    console.log("receiver found");
+    appendMessage("receiver found");
+  }
+  else {
+    console.log("receiver list empty");
+    appendMessage("receiver list empty");
+  }
+}
+
+/**
+ * launch app and request session
+ */
+function launchApp() {
+  console.log("launching app...");
+  appendMessage("launching app...");
+  chrome.cast.requestSession(onRequestSessionSuccess, onLaunchError);
+}
+
+/**
+ * callback on success for requestSession call  
+ * @param {Object} e A non-null new session.
+ */
+function onRequestSessionSuccess(e) {
+  console.log("session success: " + e.sessionId);
+  appendMessage("session success: " + e.sessionId);
+  session = e;
+}
+
+/**
+ * callback on launch error
+ */
+function onLaunchError() {
+  console.log("launch error");
+  appendMessage("launch error");
+}
+
+/**
+ * stop app/session
+ */
+function stopApp() {
+  session.stop(onStopAppSuccess, onError);
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * append message to debug message window
+ * @param {string} message A message string
+ */
+function appendMessage(message) {
+  var dw = document.getElementById("debugmessage");
+  dw.innerHTML += '\n' + JSON.stringify(message);
+};
+</script>
