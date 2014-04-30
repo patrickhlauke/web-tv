@@ -17,7 +17,8 @@ fieldset { margin: 2em 0; border: none; padding: 0 0 0.5em; background: #f7f7f7;
 </head>
 <body>
 <h1>Ideal viewport calculator</h1>
-<p>Given a device's physical dimensions (as screen diagonal), actual hardware resolution, and average viewing distance, calculates the ideal viewport dimensions and device pixel ratio based on the <a href="http://www.w3.org/TR/CSS21/syndata.html#length-units">CSS reference pixel</a>.
+<p>Given a device's physical dimensions (as screen diagonal), actual hardware resolution, and average viewing distance, calculates the ideal viewport dimensions and device pixel ratio based on the <a href="http://www.w3.org/TR/CSS21/syndata.html#length-units">CSS reference pixel</a>.</p>
+<p>Current "web on TV" browsers generally use either full-HD (1920×1080) or HD-ready (1280×720) resolution, which is often inadequate (too high resolution for regular-sized TVs at average "10 foot experience" distance, making everything too small and requiring users to zoom and/or designers to provide a separate TV stylesheet or site altogether - perhaps fine for bespoke TV-only versions, but not going to happen for general websites). The issue will only get worse with proliferation of different form factors (higher-resolution TVs like 4K and 8K, or giant 110" screen walls), as one-size solutions ("make text twice as big for TV") won't work. Proposed solution: TV browsers should react like mobile browsers and, if <code>&lt;meta name="viewport" content="width=device-width"></code> is present, switch to using ideal viewport (which is device-specific, set by manufacturer or, in case of set-top boxes, determined during user-guided setup).</p>
 <form onsubmit="calculate(); return false;">
 
 <label for="preset">Presets</label>
