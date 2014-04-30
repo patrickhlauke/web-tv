@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<title>CSS2.1 Media Type - screen only</title>
+<style>
+div { color: #fff; }
+#screen { background: #060; display: none;}
+#no-screen { background: #600; }
+
+
+@media screen {
+	#screen {
+		display: block;
+	}
+	#no-screen {
+		display: none;
+	}
+}
+</style>
+<h1>CSS2.1 Media Types</h1>
+<p>Quick test for support of <code>screen</code> only, to test for possible heuristic switching of media types.</p>
+
+<div id="screen"><code>media="screen"</code> supported</div>
+<div id="no-screen"><code>media="screen"</code> not supported</div>

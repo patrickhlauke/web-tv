@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<title>CSS2.1 Media Type - screen, print, projection, speech, handheld, tv</title>
+<style>
+div { color: #fff; }
+#screen, #print, #projection, #speech, #handheld, #tv, #reader { background: #060; display: none;}
+#no-screen, #no-print, #no-projection, #no-speech, #no-handheld, #no-tv, #no-reader { background: #600; }
+
+@media screen {
+	#screen {
+		display: block;
+	}
+	#no-screen {
+		display: none;
+	}
+}
+@media print {
+	#print {
+		display: block;
+	}
+	#no-print {
+		display: none;
+	}
+}
+@media projection {
+	#projection {
+		display: block;
+	}
+	#no-projection {
+		display: none;
+	}
+}
+@media speech {
+	#speech {
+		display: block;
+	}
+	#no-speech {
+		display: none;
+	}
+}
+@media handheld {
+	#handheld {
+		display: block;
+	}
+	#no-handheld {
+		display: none;
+	}
+}
+@media tv {
+	#tv {
+		display: block;
+	}
+	#no-tv {
+		display: none;
+	}
+}
+@media reader {
+	#reader {
+		display: block;
+	}
+	#no-reader {
+		display: none;
+	}
+}
+</style>
+<h1>CSS2.1 Media Types</h1>
+<p>Quick test for support of <code>screen</code>, <code>print</code>, <code>projection</code>, <code>speech</code>, <code>handheld</code>, <code>tv</code> and <code>reader</code>.</p>
+
+<div id="screen"><code>media="screen"</code> supported</div>
+<div id="no-screen"><code>media="screen"</code> not supported</div>
+<div id="print"><code>media="print"</code> supported</div>
+<div id="no-print"><code>media="print"</code> not supported</div>
+<div id="projection"><code>media="projection"</code> supported</div>
+<div id="no-projection"><code>media="projection"</code> not supported</div>
+<div id="speech"><code>media="speech"</code> supported</div>
+<div id="no-speech"><code>media="speech"</code> not supported</div>
+<div id="handheld"><code>media="handheld"</code> supported</div>
+<div id="no-handheld"><code>media="handheld"</code> not supported</div>
+<div id="tv"><code>media="tv"</code> supported</div>
+<div id="no-tv"><code>media="tv"</code> not supported</div>
+<div id="reader"><code>media="reader"</code> supported</div>
+<div id="no-reader"><code>media="reader"</code> not supported</div>

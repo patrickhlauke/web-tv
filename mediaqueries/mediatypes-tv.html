@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<title>CSS2.1 Media Type - tv only</title>
+<style>
+div { color: #fff; }
+#tv { background: #060; display: none;}
+#no-tv { background: #600; }
+
+
+@media tv {
+	#tv {
+		display: block;
+	}
+	#no-tv {
+		display: none;
+	}
+}
+</style>
+<h1>CSS2.1 Media Types</h1>
+<p>Quick test for support of <code>tv</code> only (without any explicit <code>screen</code> styles), to test for possible heuristic switching of media types.</p>
+
+<div id="tv"><code>media="tv"</code> supported</div>
+<div id="no-tv"><code>media="tv"</code> not supported</div>

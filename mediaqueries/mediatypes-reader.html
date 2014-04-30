@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<title>CSS2.1 Media Type - reader only</title>
+<style>
+div { color: #fff; }
+#reader { background: #060; display: none;}
+#no-reader { background: #600; }
+
+
+@media reader {
+	#screen {
+		display: block;
+	}
+	#no-reader {
+		display: none;
+	}
+}
+</style>
+<h1>CSS2.1 Media Types</h1>
+<p>Quick test for support of <code>reader</code> only, to test for possible heuristic switching of media types.</p>
+
+<div id="reader"><code>media="reader"</code> supported</div>
+<div id="no-reader"><code>media="reader"</code> not supported</div>
