@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Keyboard event output</title>
+</head>
+<body>
+<h1>Keyboard event output</h1>
+<p>Hooks into <code>keydown</code> event and outputs legacy and DOM3 event attributes</p>
+<output></output>
+</body>
+<script>
+// example using event delegation
+if (window.KeyboardEvent){
+	window.addEventListener('keydown', handler, false);
+} else {
+	window.addEventListener('keypress', handler, false);
+}
+
+function handler(event){
+	var o = document.getElementsByTagName('output')[0];
+	console.dir(event);
+	o.innerHTML += 'event.type: '+event.type+' / event.keycode: '+event.keyCode+' / event.charCode: '+event.charCode+' / event.key: '+event.key+' / event.location: '+event.location+' / event.altKey: '+event.altKey+' / event.shiftKey: '+event.shiftKey+' / event.ctrlKey: '+event.ctrlKey+' / event.metaKey: '+event.metaKey+' / event.repeat: '+event.repeat+'<br>';
+}
+</script>
+</html>
