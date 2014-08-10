@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Keyboard event output with preventDefault</title>
+<meta charset=utf-8>
+<meta name="viewport" content="width=device-width">
+<style>
+html,body {
+	background: #eee;
+	color: #333;
+	font: 1em/1 Arial, sans;
+}
+
+h1 {
+	font-size: 1.2em;
+}
+
+output {
+	display: block;
+	padding: 1em;
+	font-size: 0.75em;
+	background: #ddd;
+	overflow:auto;
+}
+</style>
+</head>
+<body>
+<h1>Keyboard event output</h1>
+<p>Hooks into <code>keydown</code> event and outputs KeyboardEvent <a href="http://www.w3.org/TR/DOM-Level-3-Events/#events-keyboardevents">DOM3 KeyboardEvent</a> attributes (including legacy attributes like <code>keyCode</code>, <code>charCode</code> and <code>which</code>, as well as the <code>keyIdentifier</code> and <code>keyLocation</code> attributes from a previous version of the spec). Additionally fires <code>preventDefault</code>.</p>
+<output></output>
+</body>
+<script>
+var attrs = ['type','which','keyCode','charCode','keyIdentifier','key','keyLocation','location','altKey','shiftKey','ctrlKey','metaKey','repeat'];
+if (window.KeyboardEvent){
+	window.addEventListener('keydown', handler, false);
+} else {
+	window.addEventListener('keypress', handler, false);
+}
+
+function handler(event){
+	event.preventDefault();
+	var o = document.getElementsByTagName('output')[0];
+	console.dir(event);
+	for (var i=0; i<attrs.length; i++) {
+		o.innerHTML += attrs[i]+': '+event[attrs[i]]+' / ';
+	}
+	o.innerHTML += '<br>';
+}
+</script>
+</html>
