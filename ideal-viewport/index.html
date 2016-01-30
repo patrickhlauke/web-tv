@@ -11,66 +11,119 @@ input, select { padding: 0.25em; border-radius: 3px; border: 1px #bbb solid; fon
 input[type=checkbox] { display: inline; }
 input[readonly] { background: #f0f0f0; border: 1px #aaa solid;}
 input[type=submit], label { margin: 1em 0 0 0;}
+input[type=submit] {display: inline-block; margin-left: 2em;}
 legend { margin: 0; padding: 0; font-size: 1.5em;}
 fieldset { margin: 2em 0; border: none; padding: 0 0 0.5em; background: #f7f7f7;}
+div>fieldset {width: 45%; display: inline-block;}
 </style>
 </head>
 <body>
 <h1>Ideal viewport calculator</h1>
-<p>Given a device's physical dimensions (as screen diagonal), actual hardware resolution, and average viewing distance, calculates the ideal viewport dimensions and device pixel ratio based on the <a href="http://www.w3.org/TR/CSS21/syndata.html#length-units">CSS reference pixel</a>.</p>
-<p>Current "web on TV" browsers generally use either full-HD (1920×1080) or HD-ready (1280×720) resolution, which is often inadequate (too high resolution for regular-sized TVs at average "10 foot experience" distance, making everything too small and requiring users to zoom and/or designers to provide a separate TV stylesheet or site altogether - perhaps fine for bespoke TV-only versions, but not going to happen for general websites). The issue will only get worse with proliferation of different form factors (higher-resolution TVs like 4K and 8K, or giant 110" screen walls), as one-size solutions ("make text twice as big for TV in your separate site" or "just introduce a new device class 'tv' CSS 3 media feature") won't work. Proposed solution: TV browsers should react like mobile browsers and, if <code>&lt;meta name="viewport" content="width=device-width"></code> is present, switch to using ideal viewport (which is device-specific, set by manufacturer or, in case of set-top boxes, determined during user-guided setup).</p>
+<p>Given a device's physical dimensions (as screen diagonal), actual hardware resolution, and average viewing distance, calculates the ideal viewport dimensions and device pixel ratio based on the <a href="http://www.w3.org/TR/css3-values/#reference-pixel">CSS reference pixel</a>.</p>
+<p>Current “web on TV” browsers generally use either full-HD (1920×1080) or HD-ready (1280×720) resolution, which is often inadequate (too high resolution for regular-sized TVs at average “10 foot experience” distance, making everything too small and requiring users to zoom and/or designers to provide a separate TV stylesheet or site altogether – perhaps fine for bespoke TV-only versions, but not going to happen for general websites). The issue will only get worse with proliferation of different form factors (higher-resolution TVs like 4K and 8K, or giant 110ʺ screen walls), as one-size solutions (“make text twice as big for TV in your separate site” or “just introduce a new device class ‘tv’ CSS 3 media feature”) won't work. Proposed solution: TV browsers should react like mobile browsers and, if <code>&lt;meta name="viewport" content="width=device-width"></code> is present, switch to using ideal viewport (which is device-specific, set by manufacturer or, in case of set-top boxes, determined during user-guided setup).</p>
 <form onsubmit="calculate(); return false;">
 
+<div>
 <label for="preset">Presets</label>
 <select id="preset" name="presets" onchange="fillPreset(this.value);">
-	<option value=""></option>
+	<option value="">(Custom)</option>
 </select>
+<input type="submit" value="Calculate">
+<label for="fractionalDpr"><input type="checkbox" id="fractionalDpr" onchange="calculate()"> allow fractional <abbr title="device pixel ratio">DPR</abbr> (multiples of 0.25)</label>
+<fieldset>
 <label for="devicePxWidth">Device pixels (horizontal)</label>
-<input type="number" id="devicePxWidth" onblur="resetPreset()">
+<input type="number" id="devicePxWidth" step="16" onblur="resetPreset()">
 <label for="devicePxHeight">Device pixels (vertical)</label>
-<input type="number" id="devicePxHeight" onblur="resetPreset()">
-<label for="diagonal">Screen diagonal (inches)</label>
+<input type="number" id="devicePxHeight" step="16" onblur="resetPreset()">
+<label for="devicePxCount">Device pixels</label>
+<input readonly type="number" id="devicePxCount">
+<label for="diagonal">Screen diagonal (inch)</label>
 <input type="number" id="diagonal" step="0.1" onblur="resetPreset()">
 <label for="viewingDistance">Average viewing distance (cm)</label>
-<input type="number" id="viewingDistance" onblur="resetPreset()">
-<label for="fractionalDpr"><input type="checkbox" id="fractionalDpr"> allow fractional <abbr title="device pixel ratio">dpr</abbr> (multiples of 0.25)</label>
-<input type="submit" value="Calculate">
+<input type="number" id="viewingDistance" step="5" onblur="resetPreset()">
+</fieldset>
+<fieldset>
+<label for="physicalWidth">Device width</label>
+<input readonly type="text" id="physicalWidth">
+<label for="physicalHeight">Device height</label>
+<input readonly type="text" id="physicalHeight">
+<label for="physicalArea">Device area</label>
+<input readonly type="text" id="physicalArea">
+<label for="aspectRatio">Device aspect ratio <output type="text" for="aspectRatio" id="vulgarAR" /></label>
+<input readonly type="number" id="aspectRatio">
+<label for="resolution">Device resolution (dot/in)</label>
+<input readonly type="number" id="resolution">
+</fieldset>
+</div>
 
+<div>
 <fieldset>
 <legend>Precise</legend>
 <label for="idealViewportWidth">Ideal viewport width (CSS px)</label>
-<input type="text" readonly id="idealViewportWidth">
+<input readonly type="number" id="idealViewportWidth" for="devicePxWidth devicePxHeight diagonal viewingDistance" />
 <label for="idealViewportHeight">Ideal viewport height (CSS px)</label>
-<input type="text" readonly id="idealViewportHeight">
-<label for="devicePixelRatio">Device pixel ratio (dpr)</label>
-<input type="text" readonly id="devicePixelRatio">
+<input readonly type="number" id="idealViewportHeight" for="devicePxWidth devicePxHeight diagonal viewingDistance" />
+<label for="devicePixelRatio">Device pixel ratio (DPR)</label>
+<input readonly type="number" id="devicePixelRatio" for="devicePxWidth devicePxHeight diagonal viewingDistance" />
 </fieldset>
 
 <fieldset>
 <legend>Adjusted</legend>
 <label for="adjustedIdealViewportWidth">Ideal viewport width (CSS px)</label>
-<input type="text" readonly id="adjustedIdealViewportWidth">
+<input readonly type="number" id="adjustedIdealViewportWidth" for="devicePxWidth devicePxHeight diagonal viewingDistance" />
 <label for="adjustedIdealViewportHeight">Ideal viewport height (CSS px)</label>
-<input type="text" readonly id="adjustedIdealViewportHeight">
-<label for="adjustedDevicePixelRatio">Device pixel ratio (dpr)</label>
-<input type="text" readonly id="adjustedDevicePixelRatio">
+<input readonly type="number" id="adjustedIdealViewportHeight" for="devicePxWidth devicePxHeight diagonal viewingDistance" />
+<label for="adjustedDevicePixelRatio">Device pixel ratio (DPR)</label>
+<input readonly type="number" id="adjustedDevicePixelRatio" for="devicePxWidth devicePxHeight diagonal viewingDistance" />
 </fieldset>
+</div>
 
 </form>
 
 </body>
 <script>
 var presets = {
-	'85inch8KTV': { name: '85" 8K/Ultra HD/2160p TV at 10\'', devicePxWidth: 7680, devicePxHeight: 4320, diagonal: 85, viewingDistance: 300},
-	'110inch4KTV': { name: '110" 4K/Ultra HD/2160p TV at 10\'', devicePxWidth: 3840, devicePxHeight: 2160, diagonal: 110, viewingDistance: 300},
-	'55inch4KTV': { name: '55" 4K/Ultra HD/2160p TV at 10\'', devicePxWidth: 3840, devicePxHeight: 2160, diagonal: 55, viewingDistance: 300},
-	'42inch1080pTV': { name: '42" 1080p HD TV at 10\'', devicePxWidth: 1920, devicePxHeight: 1080, diagonal: 42, viewingDistance: 300},
-	'32inch720pTV': { name: '32" 720p HD-ready TV at 10\'', devicePxWidth: 1280, devicePxHeight: 720, diagonal: 32, viewingDistance: 300},
-	'30inchPALTV': { name: '20" PAL TV at 10\'', devicePxWidth: 768, devicePxHeight: 576, diagonal: 20, viewingDistance: 300},
-	'27inchQHD' : { name: '27" QHD monitor (e.g. Apple Thunderbolt Display) at 85cm', devicePxWidth: 2560, devicePxHeight: 1440, diagonal: 27, viewingDistance: 85},
-	'23inch1080pLCD' : { name: '23" 1080p LCD monitor at 85cm', devicePxWidth: 1920, devicePxHeight: 1080, diagonal: 23, viewingDistance: 85},
-	'iPhone5c': { name: 'iPhone 5c 4" landscape at 40cm', devicePxWidth: 1136, devicePxHeight: 640, diagonal: 4, viewingDistance: 40},
-	'iPhone3G': { name: 'iPhone 3G 4.5" landscape at 40cm', devicePxWidth: 480, devicePxHeight: 320, diagonal: 4.5, viewingDistance: 40}
+	'85inch8KTV': { name: '85ʺ 8K/Ultra HD/2160p TV at 10ʹ', devicePxWidth: 7680, devicePxHeight: 4320, diagonal: 85, viewingDistance: 300},
+	'110inch4KTV': { name: '110ʺ 4K/Ultra HD/2160p TV at 10ʹ', devicePxWidth: 3840, devicePxHeight: 2160, diagonal: 110, viewingDistance: 300},
+	'55inch4KTV': { name: '55ʺ 4K/Ultra HD/2160p TV at 10ʹ', devicePxWidth: 3840, devicePxHeight: 2160, diagonal: 55, viewingDistance: 300},
+	'42inch1080pTV': { name: '42ʺ 1080p HD TV at 10ʹ', devicePxWidth: 1920, devicePxHeight: 1080, diagonal: 42, viewingDistance: 300},
+	'32inchHDreadyTV': { name: '32ʺ HD-ready TV at 10ʹ', devicePxWidth: 1366, devicePxHeight: 768, diagonal: 32, viewingDistance: 300},
+	'32inch720pTV': { name: '32ʺ 720p TV at 10ʹ', devicePxWidth: 1280, devicePxHeight: 720, diagonal: 32, viewingDistance: 300},
+	'30inchPALTV': { name: '20ʺ PAL SDTV at 10ʹ', devicePxWidth: 768, devicePxHeight: 576, diagonal: 20, viewingDistance: 300},
+	'30inchNTSCTV': { name: '20ʺ NTSC SDTV at 10ʹ', devicePxWidth: 640, devicePxHeight: 480, diagonal: 20, viewingDistance: 300},
+	'27inchQHD' : { name: '27ʺ QHD monitor (e.g. Apple Thunderbolt Display) at 85cm', devicePxWidth: 2560, devicePxHeight: 1440, diagonal: 27, viewingDistance: 85},
+	'23inch1080pLCD' : { name: '23ʺ 1080p LCD monitor at 85cm', devicePxWidth: 1920, devicePxHeight: 1080, diagonal: 23, viewingDistance: 85},
+	'CSSmonitor' : { name: '20ʺ 4:3 96dpi monitor at 71cm', devicePxWidth: 1536, devicePxHeight: 1152, diagonal: 20, viewingDistance: 71},
+
+	'MacBookPro17HiRes': { name: 'MacBook Pro 17 HiRes at 70cm', devicePxWidth: 1920, devicePxHeight: 1200, diagonal: 17, viewingDistance: 70},
+	'MacBookPro17': { name: 'MacBook Pro 17 at 70cm', devicePxWidth: 1680, devicePxHeight: 1050, diagonal: 17, viewingDistance: 70},
+	'MacBookPro15New': { name: 'MacBook Pro 15 New at 70cm', devicePxWidth: 2880, devicePxHeight: 1800, diagonal: 15, viewingDistance: 70},
+	'MacBookPro15': { name: 'MacBook Pro 15 at 70cm', devicePxWidth: 1440, devicePxHeight: 900, diagonal: 15, viewingDistance: 70},
+	'MacBookPro13New': { name: 'MacBook Pro 13 New at 70cm', devicePxWidth: 2560, devicePxHeight: 1600, diagonal: 13, viewingDistance: 70},
+	'MacBookPro13': { name: 'MacBook Pro 13 at 70cm', devicePxWidth: 1280, devicePxHeight: 800, diagonal: 13, viewingDistance: 70},
+	'MacBookAir13': { name: 'MacBook Air 13 at 70cm', devicePxWidth: 1440, devicePxHeight: 900, diagonal: 13, viewingDistance: 70},
+	'MacBookRetina': { name: 'MacBook Retina at 70cm', devicePxWidth: 2304, devicePxHeight: 1440, diagonal: 12, viewingDistance: 70},
+	'MacBookAir11': { name: 'MacBook Air 11 at 70cm', devicePxWidth: 1368, devicePxHeight: 768, diagonal: 11, viewingDistance: 70},
+
+	'iMac27Retina': { name: 'iMac 27 Retina at 70cm', devicePxWidth: 5120, devicePxHeight: 2880, diagonal: 27, viewingDistance: 70},
+	'iMac27': { name: 'iMac 27 at 70cm', devicePxWidth: 2560, devicePxHeight: 1440, diagonal: 27, viewingDistance: 70},
+	'iMac24': { name: 'iMac 24 at 70cm', devicePxWidth: 1920, devicePxHeight: 1200, diagonal: 24, viewingDistance: 70},
+	'iMac22Retina': { name: 'iMac 21.5 Retina at 70cm', devicePxWidth: 4096, devicePxHeight: 2304, diagonal: 21.5, viewingDistance: 70},
+	'iMac22': { name: 'iMac 21.5 at 70cm', devicePxWidth: 1920, devicePxHeight: 1080, diagonal: 21.5, viewingDistance: 70},
+	'iMac20': { name: 'iMac 20 at 70cm', devicePxWidth: 1680, devicePxHeight: 1050, diagonal: 20, viewingDistance: 70},
+
+	'iPadPro': { name: 'iPad Pro 12.22" landscape at 40cm', devicePxWidth: 2732, devicePxHeight: 2048, diagonal: 12.22, viewingDistance: 40}, // ~31/2.54
+	'iPadMini2': { name: 'iPad Mini 2+ 7.9" landscape at 40cm', devicePxWidth: 2048, devicePxHeight: 1536, diagonal: 20/2.54, viewingDistance: 40},
+	'iPadMini': { name: 'iPad Mini 7.9" landscape at 40cm', devicePxWidth: 1024, devicePxHeight: 768, diagonal: 20/2.54, viewingDistance: 40},
+	'iPadAir': { name: 'iPad 3+/Air 9.7" landscape at 40cm', devicePxWidth: 2048, devicePxHeight: 1536, diagonal: 9.7, viewingDistance: 40},
+	'iPad': { name: 'iPad 1–2 9.7" landscape at 40cm', devicePxWidth: 1024, devicePxHeight: 768, diagonal: 9.7, viewingDistance: 40},
+
+	'iPhone6p': { name: 'iPhone 6 plus 5.5" landscape at 40cm', devicePxWidth: 1920, devicePxHeight: 1080, diagonal: 14/2.54, viewingDistance: 40},
+	'iPhone6': { name: 'iPhone 6 4.7" landscape at 40cm', devicePxWidth: 1334, devicePxHeight: 750, diagonal: 12/2.54, viewingDistance: 40}, 
+	'iPhone5c': { name: 'iPhone 5 4" landscape at 40cm', devicePxWidth: 1136, devicePxHeight: 640, diagonal: 10/2.54, viewingDistance: 40}, 
+	'iPhone4': { name: 'iPhone 4 3.5" landscape at 40cm', devicePxWidth: 960, devicePxHeight: 640, diagonal: 3.5, viewingDistance: 40},
+	'iPhone3G': { name: 'iPhone original–3GS 3.5" landscape at 40cm', devicePxWidth: 480, devicePxHeight: 320, diagonal: 3.5, viewingDistance: 40}
+
 };
 
 (function() {
@@ -105,17 +158,31 @@ function calculate() {
 	var viewingDistance = document.getElementById('viewingDistance').value;
 	var fractionalDpr = document.getElementById('fractionalDpr').checked;
 	var aspectRatio, referenceCSSPixel, idealViewportWidth, idealViewportHeight, devicePixelRatio, adjustedDevicePixelRatio, adjustedIdealViewportWidth, adjustedIdealViewportHeight;
+	var devicePxCount, physicalArea, resolution, vulgarAR;
 
 	if (devicePxWidth && devicePxHeight && viewingDistance) {
 		/* calculate physical width and height based on diagonal and px aspect ratio (assumes square pixels) */
+		devicePxCount = devicePxWidth * devicePxHeight;
 		aspectRatio = devicePxWidth / devicePxHeight;
+		resolution = (Math.sqrt(devicePxWidth*devicePxWidth+devicePxHeight*devicePxHeight)) / diagonal;
 		physicalHeight = diagonal / (Math.sqrt(1+(aspectRatio*aspectRatio)));
 		physicalWidth = aspectRatio * physicalHeight;
+		/* determine colloquial colon aspect ratio */
+		switch(Math.round(aspectRatio * 180)) {
+			case 240: vulgarAR = '4:3'; break; 
+			case 225: vulgarAR = '5:4'; break; 
+			case 270: vulgarAR = '3:2'; break; 
+			case 288: vulgarAR = '8:5'; break; 
+			case 300: vulgarAR = '5:3'; break; 
+			case 320: vulgarAR = '16:9'; break; 
+			default: vulgarAR = 'a:b';
+		};
 		/* normalise size to cm, as that's our distance measure */
 		physicalWidth = physicalWidth * 2.54;
 		physicalHeight = physicalHeight * 2.54;
+		physicalArea = physicalWidth * physicalHeight;
 		/* calculate size of reference CSS pixel at average viewing distance */
-		referenceCSSPixel = (0.26 / 710) * viewingDistance; /* ratio 0.26mm at 28" (710mm), related to actual viewing distance */
+		referenceCSSPixel = (0.2646 / 710) * viewingDistance; /* ratio c. 0.26mm at 28" (710mm), related to actual viewing distance */
 		/* calculate ideal viewport (precise, meaning lots of decimal places/fractional pixels) */
 		idealViewportWidth = physicalWidth / referenceCSSPixel;
 		idealViewportHeight = physicalHeight / referenceCSSPixel;
@@ -125,12 +192,19 @@ function calculate() {
 			/* whole number dpr only */
 			adjustedDevicePixelRatio = Math.round(devicePixelRatio);
 		} else {
-			/* allows multiples of 0.25 for dpr */
-			adjustedDevicePixelRatio = Math.floor(devicePixelRatio*4)*0.25;
+			/* allows multiples of 0.25 for DPR */
+			adjustedDevicePixelRatio = Math.floor(devicePixelRatio*4)/4;
 		}
-		adjustedIdealViewportWidth = Math.floor(devicePxWidth / adjustedDevicePixelRatio);
-		adjustedIdealViewportHeight = Math.floor(devicePxHeight / adjustedDevicePixelRatio);
+		adjustedIdealViewportWidth = Math.round(devicePxWidth / adjustedDevicePixelRatio);
+		adjustedIdealViewportHeight = Math.round(devicePxHeight / adjustedDevicePixelRatio);
 		/* display */
+		document.getElementById('physicalWidth').value = (Math.round(physicalWidth*100)/100) + " cm = " + (Math.round(physicalWidth/0.254)/10) + " in";
+		document.getElementById('physicalHeight').value = Math.round(physicalHeight*100)/100 + " cm = " + (Math.round(physicalHeight/0.254)/10) + " in";
+		document.getElementById('physicalArea').value = Math.round(physicalArea*100)/100 + " cm² = " + (Math.round(physicalArea/0.254/0.254)/100) + " in²";
+		document.getElementById('resolution').value = Math.round(resolution*10)/10;
+		document.getElementById('aspectRatio').value = Math.round(aspectRatio*90)/90;
+		document.getElementById('vulgarAR').value = vulgarAR;
+		document.getElementById('devicePxCount').value = devicePxCount;
 		document.getElementById('idealViewportWidth').value = idealViewportWidth;
 		document.getElementById('idealViewportHeight').value = idealViewportHeight;
 		document.getElementById('devicePixelRatio').value = devicePixelRatio;
